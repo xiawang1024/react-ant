@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 import FormList from '../../components/Form'
+import Banner from '../../components/Banner'
 
 class Form extends Component {
   constructor(props) {
@@ -11,6 +12,7 @@ class Form extends Component {
   render() {
     return (
       <div>
+        <Banner />
         <FormList />
       </div>
     )
