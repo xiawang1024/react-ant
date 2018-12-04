@@ -4,64 +4,83 @@ import {
   Button,
   WhiteSpace,
   WingBlank,
-  Carousel,
+  Toast,
   InputItem,
   TextareaItem,
   ImagePicker,
   DatePicker,
-  List,
-  Picker
+  List
 } from 'antd-mobile'
 
 import { createForm } from 'rc-form'
 import dayjs from 'dayjs'
 
-const data = [
-  {
-    url: 'https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg',
-    id: '2121'
-  },
-  {
-    url: 'https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg',
-    id: '2122'
-  }
-]
 class FormList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      formData: {},
-      files: data
+      files: [],
+      submitLoading: false
     }
   }
   submit = () => {
     this.props.form.validateFields((error, value) => {
-      this.setState({
-        formData: value
-      })
       if (!error) {
-        console.log(value)
+        this.setState({
+          submitLoading: true
+        })
+        this.postData(value)
+      } else {
+        Toast.info('请填写完成信息', 2)
       }
     })
   }
+  postData = data => {
+    data.date = dayjs(data.date).format('YYYY-MM-DD')
+    data.files = this.state.files
+    setTimeout(() => {
+      console.log(data)
+      this.setState({
+        submitLoading: false
+      })
+      Toast.success('提交成功', 2, () => {
+        this.resetForm()
+      })
+    }, 2000)
+  }
+  resetForm = () => {
+    const { setFieldsValue } = this.props.form
+    let reset = {
+      title: '',
+      detail: '',
+      date: new Date(),
+      address: '',
+      contact: '',
+      tel: ''
+    }
+    //reset form
+    setFieldsValue(reset)
+    //reset files
+    this.setState({
+      files: []
+    })
+  }
   onFileChange = (files, type, index) => {
-    console.log(files, type, index)
     this.setState({
       files
     })
   }
-  onIptChange = value => {
-    alert(11)
-  }
+
   render() {
-    const { getFieldProps, getFieldsValue, getFieldError } = this.props.form
-    const { files, formData } = this.state
+    const { getFieldProps, getFieldError } = this.props.form
+    const { files } = this.state
     return (
-      <div className='FormList'>
+      <form className='FormList' style={{ paddingBottom: '80px' }}>
         <WhiteSpace />
 
         <InputItem
           name='title'
+          clear
           error={getFieldError('title') ? true : false}
           {...getFieldProps('title', { rules: [{ required: true }] })}
           placeholder='请输入线索主题'
@@ -71,6 +90,7 @@ class FormList extends Component {
         </InputItem>
         <TextareaItem
           name='detail'
+          clear
           error={getFieldError('detail') ? true : false}
           {...getFieldProps('detail', { rules: [{ required: true }] })}
           placeholder='请输入线索具体内容，点击+可以上传图片'
@@ -98,6 +118,7 @@ class FormList extends Component {
         <WhiteSpace size='sm' />
         <InputItem
           name='address'
+          clear
           error={getFieldError('address') ? true : false}
           {...getFieldProps('address', { rules: [{ required: true }] })}
           placeholder='请填写区域信息'
@@ -108,6 +129,7 @@ class FormList extends Component {
         <WhiteSpace size='lg' />
         <InputItem
           name='contact'
+          clear
           error={getFieldError('contact') ? true : false}
           {...getFieldProps('contact', { rules: [{ required: true }] })}
           placeholder='请填写联系人'
@@ -117,6 +139,8 @@ class FormList extends Component {
         </InputItem>
         <InputItem
           name='tel'
+          type='phone'
+          clear
           onChange={this.onIptChange}
           error={getFieldError('tel') ? true : false}
           {...getFieldProps('tel', { rules: [{ required: true }] })}
@@ -128,21 +152,15 @@ class FormList extends Component {
 
         <WhiteSpace size='xl' />
         <WingBlank>
-          <Button type='primary' loading onClick={this.submit}>
+          <Button
+            type='primary'
+            loading={this.state.submitLoading}
+            onClick={this.submit}
+          >
             提交
           </Button>
         </WingBlank>
-        {console.log(dayjs(getFieldsValue().date).format('YYYY-MM-DD'))}
-        {console.log(
-          dayjs()
-            .set('month', 3)
-            .startOf('months')
-            .add(5, 'day')
-            .set('year', 2016)
-            .format('YYYY-MM-DD')
-        )}
-        <WhiteSpace size='xl' />
-      </div>
+      </form>
     )
   }
 }
