@@ -14,6 +14,7 @@ import {
 } from 'antd-mobile'
 
 import { createForm } from 'rc-form'
+import dayjs from 'dayjs'
 
 const data = [
   {
@@ -131,7 +132,15 @@ class FormList extends Component {
             提交
           </Button>
         </WingBlank>
-        {console.log(new Date(getFieldsValue().date).getTime())}
+        {console.log(dayjs(getFieldsValue().date).format('YYYY-MM-DD'))}
+        {console.log(
+          dayjs()
+            .set('month', 3)
+            .startOf('months')
+            .add(5, 'day')
+            .set('year', 2016)
+            .format('YYYY-MM-DD')
+        )}
         <WhiteSpace size='xl' />
       </div>
     )
