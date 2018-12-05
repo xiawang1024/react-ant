@@ -1,12 +1,46 @@
 import React, { Component } from 'react'
 
-import { InputItem, WingBlank, WhiteSpace, Button, Flex } from 'antd-mobile'
+import {
+  InputItem,
+  WingBlank,
+  WhiteSpace,
+  Button,
+  Flex,
+  Toast
+} from 'antd-mobile'
 import { createForm } from 'rc-form'
 
 class SignIn extends Component {
   constructor(props) {
     super(props)
     this.state = {}
+  }
+  signInHandler = () => {
+    this.props.form.validateFields((error, value) => {
+      if (!error) {
+        this.setState({
+          signUpLoading: true
+        })
+
+        this.postData(value)
+      } else {
+        Toast.info('请填写账号和密码', 2)
+      }
+    })
+  }
+  postData = data => {
+    setTimeout(() => {
+      console.log(data)
+      this.setState({
+        signUpLoading: false
+      })
+      Toast.success('登录成功', 2, () => {
+        console.log('准备跳转到报料')
+      })
+    }, 2000)
+  }
+  toSignUpHandler = () => {
+    console.log('signUp')
   }
   render() {
     const { getFieldProps, getFieldError } = this.props.form
@@ -36,7 +70,9 @@ class SignIn extends Component {
           </InputItem>
         </form>
         <WhiteSpace size='xl' />
-        <Button type='primary'>登录</Button>
+        <Button type='primary' onClick={this.signInHandler}>
+          登录
+        </Button>
         <div
           style={{
             marginTop: '50px',
@@ -46,7 +82,9 @@ class SignIn extends Component {
           }}
         />
         <WhiteSpace size='xl' />
-        <Button type='primary'>注册</Button>
+        <Button type='primary' onClick={this.toSignUpHandler}>
+          注册
+        </Button>
       </WingBlank>
     )
   }

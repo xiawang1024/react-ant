@@ -54,7 +54,7 @@ class SignUp extends Component {
 
         this.postData(value)
       } else {
-        Toast.info('请填写完成信息', 2)
+        Toast.info('请填写完整信息', 2)
       }
     })
   }
@@ -86,7 +86,7 @@ class SignUp extends Component {
             type='phone'
             placeholder='186 1234 1234'
           >
-            手机号码
+            手机号
           </InputItem>
 
           <InputItem

@@ -7,7 +7,7 @@ import SignUp from './containers/SignUp'
 
 class App extends Component {
   render() {
-    return <SignUp />
+    return <SignIn />
   }
 }
 
