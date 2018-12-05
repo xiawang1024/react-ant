@@ -35,8 +35,7 @@ class TabBarExample extends React.Component {
                 style={{
                   width: '22px',
                   height: '22px',
-                  background:
-                    'url(https://zos.alipayobjects.com/rmsportal/psUFoAMjkCcjqtUCNPxB.svg) center center /  21px 21px no-repeat'
+                  background: `url(${require('./rebe.png')}) center center /  21px 21px no-repeat`
                 }}
               />
             }
@@ -45,14 +44,12 @@ class TabBarExample extends React.Component {
                 style={{
                   width: '22px',
                   height: '22px',
-                  background:
-                    'url(https://zos.alipayobjects.com/rmsportal/IIRLrXXrFAhXVdhMWgUI.svg) center center /  21px 21px no-repeat'
+                  background: `url(${require('./rebe-sele.png')}) center center /  21px 21px no-repeat`
                 }}
               />
             }
             title='报料'
             key='Friend'
-            dot
             selected={this.state.selectedTab === 'greenTab'}
             onPress={() => {
               this.setState({
@@ -63,14 +60,24 @@ class TabBarExample extends React.Component {
             {this.renderContent('Friend')}
           </TabBar.Item>
           <TabBar.Item
-            icon={{
-              uri:
-                'https://zos.alipayobjects.com/rmsportal/asJMfBrNqpMMlVpeInPQ.svg'
-            }}
-            selectedIcon={{
-              uri:
-                'https://zos.alipayobjects.com/rmsportal/gjpzzcrPMkhfEqgbYvmN.svg'
-            }}
+            icon={
+              <div
+                style={{
+                  width: '22px',
+                  height: '22px',
+                  background: `url(${require('./hist.png')}) center center /  21px 21px no-repeat`
+                }}
+              />
+            }
+            selectedIcon={
+              <div
+                style={{
+                  width: '22px',
+                  height: '22px',
+                  background: `url(${require('./hist-sele.png')}) center center /  21px 21px no-repeat`
+                }}
+              />
+            }
             title='我的历史'
             key='my'
             selected={this.state.selectedTab === 'yellowTab'}
