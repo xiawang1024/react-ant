@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 
 import {
   InputItem,
@@ -40,6 +41,7 @@ class SignIn extends Component {
     }, 2000)
   }
   toSignUpHandler = () => {
+    this.props.history.push('/signUp')
     console.log('signUp')
   }
   render() {
@@ -57,7 +59,7 @@ class SignIn extends Component {
             type='phone'
             placeholder='186 1234 1234'
           >
-            手机号码
+            手机号
           </InputItem>
 
           <InputItem
@@ -90,4 +92,4 @@ class SignIn extends Component {
   }
 }
 
-export default createForm()(SignIn)
+export default withRouter(createForm()(SignIn))

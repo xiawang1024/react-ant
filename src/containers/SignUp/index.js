@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 
 import {
   InputItem,
@@ -64,8 +65,8 @@ class SignUp extends Component {
       this.setState({
         signUpLoading: false
       })
-      Toast.success('注册成功', 2, () => {
-        console.log('准备跳转到登录页')
+      Toast.success('注册成功，去登录', 2, () => {
+        this.props.history.push('/signIn')
       })
     }, 2000)
   }
@@ -118,4 +119,4 @@ class SignUp extends Component {
   }
 }
 
-export default createForm()(SignUp)
+export default withRouter(createForm()(SignUp))
