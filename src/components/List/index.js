@@ -63,9 +63,11 @@ class ListViewExample extends React.Component {
   }
 
   componentDidMount() {
-    let hei = 1000
-    // document.documentElement.clientHeight -
-    // React.findDOMNode(this.lv).parentNode.offsetTop
+    // let hei =
+    //   document.documentElement.clientHeight -
+    //   React.findDOMNode(this.lv).parentNode.offsetTop
+    const hei = 1000
+    // document.documentElement.clientHeight - this.lv.parentNode.offsetTop
 
     setTimeout(() => {
       genData()
