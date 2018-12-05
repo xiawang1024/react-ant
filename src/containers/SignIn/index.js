@@ -14,13 +14,15 @@ import { createForm } from 'rc-form'
 class SignIn extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      signInLoading: false
+    }
   }
   signInHandler = () => {
     this.props.form.validateFields((error, value) => {
       if (!error) {
         this.setState({
-          signUpLoading: true
+          signInLoading: true
         })
 
         this.postData(value)
@@ -33,10 +35,11 @@ class SignIn extends Component {
     setTimeout(() => {
       console.log(data)
       this.setState({
-        signUpLoading: false
+        signInLoading: false
       })
       Toast.success('登录成功', 2, () => {
         console.log('准备跳转到报料')
+        this.props.history.push('/home')
       })
     }, 2000)
   }
@@ -72,7 +75,11 @@ class SignIn extends Component {
           </InputItem>
         </form>
         <WhiteSpace size='xl' />
-        <Button type='primary' onClick={this.signInHandler}>
+        <Button
+          type='primary'
+          loading={this.state.signInLoading}
+          onClick={this.signInHandler}
+        >
           登录
         </Button>
         <div

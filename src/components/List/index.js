@@ -1,5 +1,6 @@
 import React from 'react'
 import { ListView } from 'antd-mobile'
+import ReactDOM from 'react-dom'
 const data = [
   {
     img: 'https://zos.alipayobjects.com/rmsportal/dKbkpPXKfvZzWCM.png',
@@ -17,8 +18,8 @@ const data = [
     des: '不是所有的兼职汪都需要风吹日晒'
   }
 ]
-const NUM_SECTIONS = 5
-const NUM_ROWS_PER_SECTION = 5
+const NUM_SECTIONS = 3
+const NUM_ROWS_PER_SECTION = 3
 let pageIndex = 0
 
 const dataBlobs = {}
@@ -63,11 +64,9 @@ class ListViewExample extends React.Component {
   }
 
   componentDidMount() {
-    // let hei =
-    //   document.documentElement.clientHeight -
-    //   React.findDOMNode(this.lv).parentNode.offsetTop
-    const hei = 1000
-    // document.documentElement.clientHeight - this.lv.parentNode.offsetTop
+    let hei =
+      document.documentElement.clientHeight -
+      ReactDOM.findDOMNode(this.lv).parentNode.offsetTop
 
     setTimeout(() => {
       genData()
@@ -156,10 +155,10 @@ class ListViewExample extends React.Component {
       <ListView
         ref={el => (this.lv = el)}
         dataSource={this.state.dataSource}
-        renderHeader={() => <span>header</span>}
+        renderHeader={() => <span>历史报料</span>}
         renderFooter={() => (
           <div style={{ padding: 30, textAlign: 'center' }}>
-            {this.state.isLoading ? 'Loading...' : 'Loaded'}
+            {this.state.isLoading ? '加载中...' : '无更多数据'}
           </div>
         )}
         renderSectionHeader={sectionData => (
