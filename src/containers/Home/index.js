@@ -10,17 +10,27 @@ class TabBarExample extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedTab: 'greenTab',
+      selectedTab: 'selectedOne',
       hidden: false,
       fullScreen: false
     }
   }
 
+  componentDidMount() {
+    let { selectedTab } = this.props.location.state || {
+      selectedTab: 'selectedOne'
+    }
+    this.setState({
+      selectedTab
+    })
+  }
+
   renderContent(pageText) {
-    return pageText === 'Friend' ? <Form /> : <ListView />
+    return pageText === 'rebe' ? <Form /> : <ListView />
   }
 
   render() {
+    let { selectedTab } = this.state
     return (
       <div style={{ position: 'fixed', height: '100%', width: '100%', top: 0 }}>
         <TabBar
@@ -49,15 +59,15 @@ class TabBarExample extends React.Component {
               />
             }
             title='报料'
-            key='Friend'
-            selected={this.state.selectedTab === 'greenTab'}
+            key='rebe'
+            selected={selectedTab === 'selectedOne'}
             onPress={() => {
               this.setState({
-                selectedTab: 'greenTab'
+                selectedTab: 'selectedOne'
               })
             }}
           >
-            {this.renderContent('Friend')}
+            {this.renderContent('rebe')}
           </TabBar.Item>
           <TabBar.Item
             icon={
@@ -80,10 +90,10 @@ class TabBarExample extends React.Component {
             }
             title='我的历史'
             key='my'
-            selected={this.state.selectedTab === 'yellowTab'}
+            selected={selectedTab === 'selectedTwo'}
             onPress={() => {
               this.setState({
-                selectedTab: 'yellowTab'
+                selectedTab: 'selectedTwo'
               })
             }}
           >

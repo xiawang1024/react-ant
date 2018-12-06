@@ -38,8 +38,9 @@ class SignIn extends Component {
         signInLoading: false
       })
       Toast.success('登录成功', 2, () => {
+        localStorage.setItem('authToken', 'weChatToken')
         console.log('准备跳转到报料')
-        this.props.history.push('/home')
+        this.props.history.push('/home', { token: 'abs' })
       })
     }, 2000)
   }

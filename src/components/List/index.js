@@ -1,6 +1,7 @@
 import React from 'react'
 import { ListView } from 'antd-mobile'
 import ReactDOM from 'react-dom'
+import { withRouter } from 'react-router-dom'
 import axios from 'axios'
 
 class ListViewExample extends React.Component {
@@ -51,6 +52,10 @@ class ListViewExample extends React.Component {
     }, 1000)
   }
 
+  toDetailHandler = id => {
+    this.props.history.push('/detail')
+  }
+
   render() {
     const row = (rowData, sectionID, rowID, highlightRow) => {
       console.log(rowData, rowID)
@@ -69,9 +74,7 @@ class ListViewExample extends React.Component {
           </div>
           <div
             style={{ display: 'flex', padding: '15px 0' }}
-            onClick={() => {
-              alert(rowID)
-            }}
+            onClick={this.toDetailHandler.bind(this, rowID)}
           >
             <img
               style={{ height: '64px', marginRight: '15px' }}
@@ -116,4 +119,4 @@ class ListViewExample extends React.Component {
   }
 }
 
-export default ListViewExample
+export default withRouter(ListViewExample)
