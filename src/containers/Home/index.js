@@ -17,9 +17,10 @@ class TabBarExample extends React.Component {
   }
 
   componentDidMount() {
-    let { selectedTab } = this.props.location.state || {
+    let { selectedTab } = (!!this.props.location.state&&!!this.props.location.state.selectedTab) ? this.props.location.state : {
       selectedTab: 'selectedOne'
     }
+
     this.setState({
       selectedTab
     })
