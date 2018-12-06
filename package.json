@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "antd-mobile": "^2.2.6",
+    "axios": "^0.18.0",
     "babel-plugin-import": "^1.11.0",
     "dayjs": "^1.7.7",
     "rc-form": "^2.2.6",
