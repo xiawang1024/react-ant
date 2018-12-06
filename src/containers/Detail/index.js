@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { Component } from 'react'
-import { NavBar, Icon, List, WhiteSpace, Flex } from 'antd-mobile'
+import { NavBar, Icon, List, Flex } from 'antd-mobile'
 import { withRouter } from 'react-router-dom'
 import './index.css'
 

@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as signInActions from '../../store/actions/signIn'
 
 import {
   InputItem,
@@ -32,6 +35,7 @@ class SignIn extends Component {
     })
   }
   postData = data => {
+    let { signInActions } = this.props
     setTimeout(() => {
       console.log(data)
       this.setState({
@@ -40,6 +44,7 @@ class SignIn extends Component {
       Toast.success('登录成功', 2, () => {
         localStorage.setItem('authToken', 'weChatToken')
         console.log('准备跳转到报料')
+        signInActions.login({ authToken: 'woshi token' })
         this.props.history.push('/home', { token: 'abs' })
       })
     }, 2000)
@@ -100,4 +105,19 @@ class SignIn extends Component {
   }
 }
 
-export default withRouter(createForm()(SignIn))
+const mapStateToProps = state => {
+  return {
+    signIn: state.signIn
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return { signInActions: bindActionCreators(signInActions, dispatch) }
+}
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(createForm()(SignIn))
+)
