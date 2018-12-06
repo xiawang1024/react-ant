@@ -41,10 +41,10 @@ class SignIn extends Component {
       this.setState({
         signInLoading: false
       })
+      signInActions.login({ authToken: 'woshi token' })
       Toast.success('登录成功', 2, () => {
         localStorage.setItem('authToken', 'weChatToken')
         console.log('准备跳转到报料')
-        signInActions.login({ authToken: 'woshi token' })
         this.props.history.push('/home', { token: 'abs' })
       })
     }, 2000)

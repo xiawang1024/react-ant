@@ -1,5 +1,6 @@
 import React, { Component, lazy, Suspense } from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 import { ActivityIndicator, Flex, WhiteSpace } from 'antd-mobile'
 
@@ -28,20 +29,11 @@ const PrivateRoute = ({ component: Component, authToken, ...rest }) => (
 )
 
 class Router extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      authToken: true
-    }
-  }
-  componentWillMount() {
-    let token = localStorage.getItem('authToken')
-    console.log(token)
-    this.setState({
-      authToken: !!token
-    })
-  }
+  
+  
   render() {
+    let {authToken} = this.props.signIn
+    console.log('render')
     return (
       <div>
         <Suspense
@@ -58,12 +50,12 @@ class Router extends Component {
             <Route path='/signUp' component={SignUp} />
             <PrivateRoute
               path='/home'
-              authToken={this.state.authToken}
+              authToken={authToken}
               component={Home}
             />
             <PrivateRoute
               path='/detail'
-              authToken={this.state.authToken}
+              authToken={authToken}
               component={Detail}
             />
             <Route path='*' component={NotFound} />
@@ -74,4 +66,10 @@ class Router extends Component {
   }
 }
 
-export default Router
+const mapStateToProps = state => {
+  return {
+    signIn: state.signIn
+  }
+}
+
+export default connect(mapStateToProps)(Router)
