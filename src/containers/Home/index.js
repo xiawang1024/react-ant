@@ -6,6 +6,8 @@ import { TabBar } from 'antd-mobile'
 import Form from '../Form'
 import ListView from '../../components/List'
 
+import {test} from '../../api'
+
 class TabBarExample extends React.Component {
   constructor(props) {
     super(props)
@@ -24,6 +26,7 @@ class TabBarExample extends React.Component {
     this.setState({
       selectedTab
     })
+    test()
   }
 
   renderContent(pageText) {

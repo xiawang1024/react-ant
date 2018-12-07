@@ -1,5 +1,8 @@
 import axios from 'axios'
 import { Toast } from 'antd-mobile'
+import {createBrowserHistory} from 'history'
+const history = createBrowserHistory()
+
 
 //拦截器
 axios.interceptors.request.use(
@@ -21,22 +24,34 @@ axios.interceptors.response.use(
   },
   error => {
     if (error.response) {
+      console.log(error.response)
       // eslint-disable-next-line default-case
       switch (error.response.status) {
         case 401:
           if (cancelFlag) return Promise.reject(error)
           cancelFlag = true
           localStorage.token = ''
+          console.log(11)
           Toast.info('会话已过期，请重新登录', 1, () => {
             cancelFlag = false
             //路由跳转到登录页
+            document.location.href='\signIn'
           })
+          break
         // eslint-disable-next-line no-fallthrough
         default:
-          Toast.error('系统异常，请稍后重试！')
+          Toast.info('系统异常，请稍后重试！')
+          return Promise.reject(error)
       }
     }
 
     return Promise.reject(error)
   }
 )
+
+
+const test = () => axios.get('/api/get/data.json')
+
+export {
+  test
+}
