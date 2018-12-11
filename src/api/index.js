@@ -1,5 +1,9 @@
 import axios from 'axios'
 import { Toast } from 'antd-mobile'
+import signIn from './../store/reducers/signIn'
+
+axios.defaults.baseURL = `https://a.weixin.hndt.com/boom/openapi`
+axios.defaults.headers.common['Authorization'] = 'AUTH_TOKEN'
 
 //拦截器
 axios.interceptors.request.use(
@@ -40,3 +44,75 @@ axios.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+/**
+ *登录
+ * @param {*} mobile 手机号
+ * @param {*} password 密码
+ */
+const fetchSignIn = (mobile, password) =>
+  axios.post(`/user/login`, {
+    mobile,
+    password
+  })
+/**
+ * 验证码发送
+ * @param {*} mobile 手机号
+ */
+const fetchSendCode = mobile => axios.post(`/user/send/code`, { mobile })
+/**
+ * 注册
+ * @param {*} mobile 手机号
+ * @param {*} password 密码
+ * @param {*} code 验证码
+ * @param {*} appId 公众号appId
+ * @param {*} openId 公众号openId
+ */
+const fetchSignUp = (mobile, password, code, appId, openId) =>
+  axios.post(`/user/register`, { mobile, password, code, appId, openId })
+/**
+ * 验证码登录
+ * @param {*} mobile 手机号
+ * @param {*} code 验证码
+ */
+const fetchSignInByCode = (mobile, code) =>
+  axios.post(`/user/code/login`, { mobile, code })
+/**
+ * 获取当前登录用户信息
+ */
+const fetchUserInfo = () => axios.get(`/user/current`)
+/**
+ * 热线提交
+ * @param {*} title 热线标题
+ * @param {*} content 热线具体内容
+ * @param {*} area 地区
+ * @param {*} occurTime 时间
+ * @param {Array} attachments 图片
+ */
+const fetchPostForm = (title, content, area, occurTime, attachments) =>
+  axios.post(`/clue/create`, { title, content, area, occurTime, attachments })
+/**
+ * 获取历史热线
+ */
+const fetchHotLineList = () => axios.get(`/clue/history`)
+
+/**
+ * upload image
+ * @param {*} formData
+ */
+const fetchUploadImage = formData =>
+  axios.post(`/clue/file/upload`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+
+export {
+  fetchSignIn,
+  fetchSendCode,
+  fetchSignUp,
+  fetchSignInByCode,
+  fetchUserInfo,
+  fetchPostForm,
+  fetchHotLineList,
+  fetchUploadImage
+}
