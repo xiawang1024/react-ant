@@ -1,5 +1,5 @@
 {
-  "homepage": ".",
+  "homepage": "http://192.168.9.41:5000/build",
   "name": "react-ant",
   "version": "0.1.0",
   "private": true,
