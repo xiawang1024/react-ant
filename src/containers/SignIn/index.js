@@ -21,16 +21,27 @@ class SignIn extends Component {
       signInLoading: false
     }
   }
+  checkPhone() {
+    var phone = document.getElementById('phone').value
+    if (!/^1(3|4|5|7|8)\d{9}$/.test(phone)) {
+      return false
+    } else {
+      return true
+    }
+  }
   signInHandler = () => {
     this.props.form.validateFields((error, value) => {
-      if (!error) {
-        this.setState({
-          signInLoading: true
-        })
-
-        this.postData(value)
+      if (error) {
+        if (error.phone) {
+          Toast.info(error.phone.errors[0].message)
+          return
+        }
+        if (error.password) {
+          Toast.info(error.password.errors[0].message)
+          return
+        }
       } else {
-        Toast.info('请填写账号和密码', 2)
+        this.postData(value)
       }
     })
   }
@@ -64,7 +75,15 @@ class SignIn extends Component {
         <form>
           <InputItem
             error={getFieldError('phone') ? true : false}
-            {...getFieldProps('phone', { rules: [{ required: true }] })}
+            {...getFieldProps('phone', {
+              rules: [
+                { required: true, message: '请输入手机号' },
+                {
+                  pattern: /1\d{2}\s*\d{4}\s*\d{4}$/,
+                  message: '请输入正确的手机号'
+                }
+              ]
+            })}
             type='phone'
             placeholder='186 1234 1234'
           >
@@ -73,7 +92,9 @@ class SignIn extends Component {
 
           <InputItem
             error={getFieldError('password') ? true : false}
-            {...getFieldProps('password', { rules: [{ required: true }] })}
+            {...getFieldProps('password', {
+              rules: [{ required: true, message: '请输入密码' }]
+            })}
             type='password'
             placeholder='****'
           >

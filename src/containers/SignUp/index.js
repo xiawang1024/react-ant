@@ -48,14 +48,21 @@ class SignUp extends Component {
 
   singUpHandler = () => {
     this.props.form.validateFields((error, value) => {
-      if (!error) {
-        this.setState({
-          signUpLoading: true
-        })
-
-        this.postData(value)
+      if (error) {
+        if (error.phone) {
+          Toast.info(error.phone.errors[0].message)
+          return
+        }
+        if (error.password) {
+          Toast.info(error.password.errors[0].message)
+          return
+        }
+        if (error.code) {
+          Toast.info(error.code.errors[0].message)
+          return
+        }
       } else {
-        Toast.info('请填写完整信息', 2)
+        this.postData(value)
       }
     })
   }
@@ -83,7 +90,15 @@ class SignUp extends Component {
         <form>
           <InputItem
             error={getFieldError('phone') ? true : false}
-            {...getFieldProps('phone', { rules: [{ required: true }] })}
+            {...getFieldProps('phone', {
+              rules: [
+                { required: true, message: '请输入手机号' },
+                {
+                  pattern: /1\d{2}\s*\d{4}\s*\d{4}$/,
+                  message: '请输入正确的手机号'
+                }
+              ]
+            })}
             type='phone'
             placeholder='186 1234 1234'
           >
@@ -92,7 +107,9 @@ class SignUp extends Component {
 
           <InputItem
             error={getFieldError('password') ? true : false}
-            {...getFieldProps('password', { rules: [{ required: true }] })}
+            {...getFieldProps('password', {
+              rules: [{ required: true, message: '请输入密码' }]
+            })}
             type='password'
             placeholder='****'
           >
@@ -100,8 +117,17 @@ class SignUp extends Component {
           </InputItem>
           <InputItem
             error={getFieldError('code') ? true : false}
-            {...getFieldProps('code', { rules: [{ required: true }] })}
+            {...getFieldProps('code', {
+              rules: [
+                { required: true, message: '请输入验证码' },
+                {
+                  pattern: /\d+/,
+                  message: '请输入正确的验证码'
+                }
+              ]
+            })}
             placeholder='验证码'
+            type='number'
             extra={codeText}
             onExtraClick={this.postCode}
           />
