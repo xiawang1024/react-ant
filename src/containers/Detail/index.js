@@ -34,7 +34,11 @@ class Detail extends Component {
     }
   }
   toHomeHandler = () => {
-    this.props.history.push('/home', { selectedTab: 'selectedTwo' })
+    // this.props.history.push('/home', { selectedTab: 'selectedTwo' })
+    this.props.history.push({
+      pathname:'/home',
+      state:{ selectedTab: 'selectedTwo' }
+    })
   }
 
   render() {
