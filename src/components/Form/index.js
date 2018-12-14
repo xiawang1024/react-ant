@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { fetchPostForm } from '../../api'
 
 import {
   Button,

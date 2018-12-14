@@ -1,9 +1,14 @@
 import axios from 'axios'
 import { Toast } from 'antd-mobile'
-import signIn from './../store/reducers/signIn'
+import Qs from 'qs'
 
-axios.defaults.baseURL = `https://a.weixin.hndt.com/boom/openapi`
-axios.defaults.headers.common['Authorization'] = 'AUTH_TOKEN'
+// axios.defaults.baseURL = `https://a.weixin.hndt.com/boom/openapi`
+axios.defaults.headers.common['Authorization'] =
+  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOlsidXNlcm5hbWUiLCIxODUzMDAzMDMwNSJdLCJleHAiOjE1NDQ3NTU3MzAsInVzZXJuYW1lIjoiMTg1MzAwMzAzMDUifQ.1-rupUs4SQgORir_KLKNtVH5MG3ccZ_DVd4kEpGStgU'
+
+// window.localStorage.getItem(
+//   'authToken'
+// )
 
 //拦截器
 axios.interceptors.request.use(
@@ -26,18 +31,25 @@ axios.interceptors.response.use(
   error => {
     if (error.response) {
       // eslint-disable-next-line default-case
-      switch (error.response.status) {
-        case 401:
+      let status = error.response.data.message
+      console.log(typeof status)
+      switch (status) {
+        case '401':
+          console.log('------------------------------------')
+          console.log(11)
+          console.log('------------------------------------')
           if (cancelFlag) return Promise.reject(error)
           cancelFlag = true
           localStorage.token = ''
-          Toast.info('会话已过期，请重新登录', 1, () => {
+          Toast.info('会话已过期，请重新登录', 2, () => {
             cancelFlag = false
             //路由跳转到登录页
+            window.location = '#/signIn'
           })
+          break
         // eslint-disable-next-line no-fallthrough
         default:
-          Toast.error('系统异常，请稍后重试！')
+          Toast.info('系统异常，请稍后重试！')
       }
     }
 
@@ -45,20 +57,28 @@ axios.interceptors.response.use(
   }
 )
 /**
+ * 全局配置 qs.stringify
+ */
+// axios.defaults.transformRequest = [data => Qs.stringify(data)]
+/**
  *登录
  * @param {*} mobile 手机号
  * @param {*} password 密码
  */
-const fetchSignIn = (mobile, password) =>
-  axios.post(`/user/login`, {
-    mobile,
-    password
-  })
+const fetchSignIn = ({ mobile, password }) =>
+  axios.post(
+    `/user/login`,
+    Qs.stringify({
+      mobile,
+      password
+    })
+  )
 /**
  * 验证码发送
  * @param {*} mobile 手机号
  */
-const fetchSendCode = mobile => axios.post(`/user/send/code`, { mobile })
+const fetchSendCode = mobile =>
+  axios.post(`/user/send/code`, Qs.stringify({ mobile }))
 /**
  * 注册
  * @param {*} mobile 手机号
@@ -67,7 +87,7 @@ const fetchSendCode = mobile => axios.post(`/user/send/code`, { mobile })
  * @param {*} appId 公众号appId
  * @param {*} openId 公众号openId
  */
-const fetchSignUp = (mobile, password, code, appId, openId) =>
+const fetchSignUp = ({ mobile, password, code, appId, openId }) =>
   axios.post(`/user/register`, { mobile, password, code, appId, openId })
 /**
  * 验证码登录

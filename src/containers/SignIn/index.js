@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as signInActions from '../../store/actions/signIn'
+import { fetchSignIn } from '../../api'
 
 import {
   InputItem,
@@ -47,18 +48,28 @@ class SignIn extends Component {
   }
   postData = data => {
     let { signInActions } = this.props
-    setTimeout(() => {
-      console.log(data)
-      this.setState({
-        signInLoading: false
-      })
-      signInActions.login({ authToken: 'woshi token' })
-      Toast.success('登录成功', 2, () => {
-        localStorage.setItem('authToken', 'weChatToken')
-        console.log('准备跳转到报料')
-        this.props.history.push('/home', { token: 'abs' })
-      })
-    }, 2000)
+    let postData = {
+      mobile: parseInt(data.phone.split(' ').join('')),
+      password: data.password
+    }
+
+    fetchSignIn(postData).then(res => {
+      let { status, data } = res.data
+      if (status === 'ok') {
+        this.setState({
+          signInLoading: false
+        })
+        let token = `Bearer ${data}`
+        signInActions.login({ authToken: token })
+        Toast.success('登录成功', 2, () => {
+          localStorage.setItem('authToken', token)
+          console.log('准备跳转到报料')
+          this.props.history.push('/home')
+        })
+      } else {
+        Toast.info('账号密码错误！', 2)
+      }
+    })
   }
   toSignUpHandler = () => {
     this.props.history.push('/signUp')

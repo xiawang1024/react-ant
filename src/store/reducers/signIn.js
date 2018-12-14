@@ -1,7 +1,7 @@
 import * as actionTypes from '../constants/signIn'
 
 const initialState = {
-  authToken: ''
+  authToken: window.localStorage.getItem('authToken')
 }
 export default function signIn(state = initialState, action) {
   switch (action.type) {

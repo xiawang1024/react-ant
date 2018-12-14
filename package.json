@@ -1,5 +1,5 @@
 {
-  "homepage": "http://192.168.50.9:3000/public/react",
+  "homepage": "./",
   "name": "react-ant",
   "version": "0.1.0",
   "private": true,
@@ -8,6 +8,7 @@
     "axios": "^0.18.0",
     "babel-plugin-import": "^1.11.0",
     "dayjs": "^1.7.7",
+    "qs": "^6.6.0",
     "rc-form": "^2.2.6",
     "react": "^16.6.3",
     "react-app-rewired": "^1.6.2",
@@ -31,5 +32,6 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "proxy": "https://a.weixin.hndt.com/boom/openapi"
 }

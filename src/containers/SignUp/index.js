@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
+import { fetchSendCode, fetchSignUp } from '../../api'
 
 import {
   InputItem,
@@ -22,18 +23,11 @@ class SignUp extends Component {
       signUpLoading: false
     }
   }
-  postCode = () => {
-    if (this.countTimer) {
-      return false
-    } else {
-      Toast.info('验证码发送成功', 1)
-      this.countDown()
-    }
-  }
+
   countDown = () => {
     let s = COUNT_DOWN
     this.countTimer = setInterval(() => {
-      let codeText = `重新发送 (${s}s)`
+      let codeText = `等待 (${s}s)`
       if (s === 0) {
         clearInterval(this.countTimer)
         this.countTimer = null
@@ -67,15 +61,56 @@ class SignUp extends Component {
     })
   }
   postData = data => {
-    setTimeout(() => {
-      console.log(data)
-      this.setState({
-        signUpLoading: false
+    let userInfo = localStorage.getItem('wxUserInfo')
+    if (userInfo) {
+      let { appId, openId } = userInfo
+      data = Object.assign(data, { appId, openId })
+    }
+    let postData = {
+      mobile: parseInt(data.phone.split(' ').join('')),
+      password: data.password,
+      code: data.code,
+      appId: data.appId || 'wx5f789dea59c6c2c5',
+      openId: data.openId || 'oaYgpwAWb44JGI4rdW8NCEgEMnJ8'
+    }
+    fetchSignUp(postData).then(res => {
+      let { status } = res.data
+      if (status === 'ok') {
+        this.setState({
+          signUpLoading: false
+        })
+        Toast.success('注册成功，去登录', 2, () => {
+          this.props.history.push('/signIn')
+        })
+      } else {
+        Toast.info('注册失败，请稍候再试', 2)
+      }
+    })
+  }
+  postCode = () => {
+    let { getFieldValue, getFieldError } = this.props.form
+    let errMsg = getFieldError('phone')
+
+    if (errMsg) {
+      Toast.info(errMsg[0], 1)
+      return false
+    }
+
+    if (this.countTimer) {
+      return false
+    } else {
+      let phone = getFieldValue('phone')
+      phone = phone.split(' ').join('')
+      fetchSendCode(parseInt(phone)).then(res => {
+        let { status } = res.data
+        if (status === 1) {
+          this.countDown()
+          Toast.info('验证码发送成功', 1)
+        } else {
+          Toast.info('验证码发送失败，请稍候再试', 2)
+        }
       })
-      Toast.success('注册成功，去登录', 2, () => {
-        this.props.history.push('/signIn')
-      })
-    }, 2000)
+    }
   }
 
   render() {

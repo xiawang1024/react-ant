@@ -6,6 +6,8 @@ import { TabBar } from 'antd-mobile'
 import Form from '../Form'
 import ListView from '../../components/List'
 
+import { fetchUserInfo } from '../../api'
+
 class TabBarExample extends React.Component {
   constructor(props) {
     super(props)
@@ -17,9 +19,14 @@ class TabBarExample extends React.Component {
   }
 
   componentDidMount() {
-    let { selectedTab } = (!!this.props.location.state&&!!this.props.location.state.selectedTab) ? this.props.location.state : {
-      selectedTab: 'selectedOne'
-    }
+    fetchUserInfo()
+
+    let { selectedTab } =
+      !!this.props.location.state && !!this.props.location.state.selectedTab
+        ? this.props.location.state
+        : {
+            selectedTab: 'selectedOne'
+          }
 
     this.setState({
       selectedTab
