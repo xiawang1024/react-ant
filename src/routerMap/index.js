@@ -29,10 +29,8 @@ const PrivateRoute = ({ component: Component, authToken, ...rest }) => (
 )
 
 class Router extends Component {
-  
-  
   render() {
-    let {authToken} = this.props.signIn
+    let { authToken } = this.props.signIn
     console.log('render')
     return (
       <div>
@@ -45,14 +43,10 @@ class Router extends Component {
           }
         >
           <Switch>
-            <Route exact path='/' component={SignIn} />
+            <Route exact path='/' component={Home} />
             <Route path='/signIn' component={SignIn} />
             <Route path='/signUp' component={SignUp} />
-            <PrivateRoute
-              path='/home'
-              authToken={authToken}
-              component={Home}
-            />
+            <PrivateRoute path='/home' authToken={authToken} component={Home} />
             <PrivateRoute
               path='/detail'
               authToken={authToken}

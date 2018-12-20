@@ -3,20 +3,16 @@ import { Toast } from 'antd-mobile'
 import Qs from 'qs'
 
 // axios.defaults.baseURL = `https://a.weixin.hndt.com/boom/openapi`
-axios.defaults.headers.common['Authorization'] =
-  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOlsidXNlcm5hbWUiLCIxODUzMDAzMDMwNSJdLCJleHAiOjE1NDQ3NTU3MzAsInVzZXJuYW1lIjoiMTg1MzAwMzAzMDUifQ.1-rupUs4SQgORir_KLKNtVH5MG3ccZ_DVd4kEpGStgU'
-
-// window.localStorage.getItem(
-//   'authToken'
-// )
+// axios.defaults.headers.common['Authorization'] = authToken
 
 //拦截器
 axios.interceptors.request.use(
   config => {
-    let token = window.localStorage.token
-    if (token) {
-      config.headers.Authorization = `token ${token}`
+    let authToken = window.localStorage.getItem('authToken')
+    if (authToken) {
+      config.headers.Authorization = `${authToken}`
     }
+    console.log(config)
     return config
   },
   error => {
@@ -35,9 +31,6 @@ axios.interceptors.response.use(
       console.log(typeof status)
       switch (status) {
         case '401':
-          console.log('------------------------------------')
-          console.log(11)
-          console.log('------------------------------------')
           if (cancelFlag) return Promise.reject(error)
           cancelFlag = true
           localStorage.token = ''
@@ -49,7 +42,15 @@ axios.interceptors.response.use(
           break
         // eslint-disable-next-line no-fallthrough
         default:
-          Toast.info('系统异常，请稍后重试！')
+          let authToken = window.localStorage.getItem('authToken')
+          if (authToken) {
+            Toast.info('系统异常，请稍后重试！')
+          } else {
+            Toast.info('请先登录', 2, () => {
+              //路由跳转到登录页
+              window.location = '#/signIn'
+            })
+          }
       }
     }
 
@@ -99,7 +100,7 @@ const fetchSignInByCode = (mobile, code) =>
 /**
  * 获取当前登录用户信息
  */
-const fetchUserInfo = () => axios.get(`/user/current`)
+const fetchUserInfo = () => axios.post(`/user/current`)
 /**
  * 热线提交
  * @param {*} title 热线标题
