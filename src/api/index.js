@@ -131,8 +131,10 @@ const fetchPostForm = ({
   )
 /**
  * 获取历史热线
+ * @param {*} page
  */
-const fetchHotLineList = () => axios.post(`/clue/history`)
+const fetchHotLineList = (page = 1) =>
+  axios.post(`/clue/history`, Qs.stringify({ page }))
 
 /**
  * upload image

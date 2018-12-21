@@ -59,7 +59,11 @@ class FormList extends Component {
           this.resetForm()
         })
       } else {
-        Toast.fail('提交失败')
+        Toast.fail('提交失败', 1, () => {
+          this.setState({
+            submitLoading: false
+          })
+        })
       }
     })
   }

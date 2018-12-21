@@ -1,11 +1,10 @@
 import React from 'react'
-import { ListView } from 'antd-mobile'
+import { ListView, PullToRefresh, Icon } from 'antd-mobile'
 import ReactDOM from 'react-dom'
 import { withRouter } from 'react-router-dom'
-import axios from 'axios'
 
 import { fetchHotLineList } from '../../api'
-
+import './index.css'
 class ListViewExample extends React.Component {
   constructor(props) {
     super(props)
@@ -16,9 +15,13 @@ class ListViewExample extends React.Component {
 
     this.state = {
       dataSource,
+      refreshing: true,
       isLoading: true,
+      currentPage: 1,
       height: (document.documentElement.clientHeight * 3) / 4
     }
+    this._data = []
+    this.totalPages = null
   }
 
   componentDidMount() {
@@ -27,31 +30,55 @@ class ListViewExample extends React.Component {
       ReactDOM.findDOMNode(this.lv).parentNode.offsetTop -
       50
 
-    fetchHotLineList().then(res => {
+    fetchHotLineList(1).then(res => {
+      let { content, totalPages } = res.data
+      this.totalPages = totalPages
+      this._data = this._data.concat(content)
       this.setState({
-        // dataSource: this.state.dataSource.cloneWithRows(res.data.list),
+        dataSource: this.state.dataSource.cloneWithRows(this._data),
         isLoading: false,
         height: hei
       })
     })
     setTimeout(() => {}, 600)
   }
-
+  onRefresh = () => {
+    this.setState({ refreshing: true, isLoading: true })
+    this._data = []
+    fetchHotLineList(1).then(res => {
+      let { content } = res.data
+      this._data = this._data.concat(content)
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(this._data),
+        isLoading: false,
+        refreshing: false,
+        currentPage: 1
+      })
+    })
+  }
   onEndReached = event => {
-    if (this.state.isLoading && !this.state.hasMore) {
-      return
-    }
     console.log('reach end', event)
     this.setState({ isLoading: true })
-    setTimeout(() => {
-      this.setState({
-        // dataSource: this.state.dataSource.cloneWithRows(
-        //   dataBlobs,
+    let { currentPage } = this.state
+    currentPage++
 
-        // ),
+    if (currentPage > this.totalPages) {
+      this.setState({
         isLoading: false
       })
-    }, 1000)
+      return
+    } else {
+      fetchHotLineList(currentPage).then(res => {
+        let { content } = res.data
+        this._data = this._data.concat(content)
+
+        this.setState({
+          dataSource: this.state.dataSource.cloneWithRows(this._data),
+          isLoading: false,
+          currentPage
+        })
+      })
+    }
   }
 
   toDetailHandler = id => {
@@ -60,35 +87,26 @@ class ListViewExample extends React.Component {
 
   render() {
     const row = (rowData, sectionID, rowID, highlightRow) => {
-      console.log(rowData, rowID)
+      // console.log(rowData, rowID)
 
       return (
-        <div key={rowID} style={{ padding: '0 15px' }}>
-          <div
-            style={{
-              lineHeight: '50px',
-              color: '#888',
-              fontSize: 18,
-              borderBottom: '1px solid #F6F6F6'
-            }}
-          >
-            {rowData.name}
-          </div>
-          <div
-            style={{ display: 'flex', padding: '15px 0' }}
-            onClick={this.toDetailHandler.bind(this, rowID)}
-          >
-            <img
-              style={{ height: '64px', marginRight: '15px' }}
-              src='{obj.img}'
-              alt=''
+        <div
+          key={rowID}
+          style={{
+            marginBottom: '15px',
+            padding: '0 15px',
+            background: '#fff',
+            borderRadius: '8px'
+          }}
+        >
+          <div className='title-wx'>{rowData.title}</div>
+
+          <div className='content-wx'>
+            <span style={{ color: '#666' }}>{rowData.createTime}</span>
+            <Icon
+              type='ellipsis'
+              onClick={this.toDetailHandler.bind(this, rowID)}
             />
-            <div style={{ lineHeight: 1 }}>
-              <div style={{ marginBottom: '8px', fontWeight: 'bold' }}>des</div>
-              <div>
-                <span style={{ fontSize: '30px', color: '#FF6E27' }}>35</span>¥{' '}
-              </div>
-            </div>
           </div>
         </div>
       )
@@ -98,9 +116,14 @@ class ListViewExample extends React.Component {
       <ListView
         ref={el => (this.lv = el)}
         dataSource={this.state.dataSource}
-        renderHeader={() => <span>历史报料</span>}
+        renderHeader={() => <span>我的报料</span>}
         renderFooter={() => (
-          <div style={{ padding: 20, textAlign: 'center' }}>
+          <div
+            style={{
+              padding: 20,
+              textAlign: 'center'
+            }}
+          >
             {this.state.isLoading ? '加载中...' : '无更多数据'}
           </div>
         )}
@@ -115,7 +138,13 @@ class ListViewExample extends React.Component {
         }}
         scrollRenderAheadDistance={500}
         onEndReached={this.onEndReached}
-        onEndReachedThreshold={10}
+        pullToRefresh={
+          <PullToRefresh
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
+          />
+        }
+        onEndReachedThreshold={500}
       />
     )
   }

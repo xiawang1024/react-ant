@@ -1,0 +1,22 @@
+.am-list-body {
+  background-color: transparent;
+}
+
+.title-wx {
+  text-overflow: ellipsis;
+  line-height: 1.5;
+  color: #333;
+  font-size: 14;
+  padding: 8px 0;
+  border-bottom: 1px solid #f6f6f6;
+}
+
+.content-wx {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
