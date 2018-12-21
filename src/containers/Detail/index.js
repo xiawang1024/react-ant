@@ -2,6 +2,8 @@
 import React, { Component } from 'react'
 import { NavBar, Icon, List, Flex } from 'antd-mobile'
 import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+
 import './index.css'
 
 const Item = List.Item
@@ -27,21 +29,17 @@ const data = [
 ]
 
 class Detail extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      showViewer: false
-    }
-  }
+  componentDidMount = () => {}
   toHomeHandler = () => {
     // this.props.history.push('/home', { selectedTab: 'selectedTwo' })
     this.props.history.push({
-      pathname:'/home',
-      state:{ selectedTab: 'selectedTwo' }
+      pathname: '/home',
+      state: { selectedTab: 'selectedTwo' }
     })
   }
 
   render() {
+    let { recordInfo } = this.props.reCord
     return (
       <div style={{ paddingBottom: '80px' }}>
         <NavBar
@@ -53,10 +51,10 @@ class Detail extends Component {
         </NavBar>
         <List renderHeader={() => '报料内容'}>
           <Item multipleLine>
-            主题 <Brief>线索主题</Brief>
+            主题 <Brief>{recordInfo.title}</Brief>
           </Item>
           <Item multipleLine>
-            具体内容 <Brief>线索具体内容</Brief>
+            具体内容 <Brief>{recordInfo.content}</Brief>
           </Item>
 
           {data.length > 0 ? (
@@ -76,16 +74,22 @@ class Detail extends Component {
           )}
         </List>
         <List renderHeader={() => '日期/区域'}>
-          <Item extra={'2018-12-06'}>日期</Item>
-          <Item extra={'郑州市二七区'}>区域</Item>
+          <Item extra={'2018-12-06'}>{recordInfo.createTime}</Item>
+          <Item extra={'郑州市二七区'}>{recordInfo.area}</Item>
         </List>
         <List renderHeader={() => '联系人'}>
-          <Item extra={'联系人'}>联系人</Item>
-          <Item extra={'13812341234'}>联系电话</Item>
+          <Item extra={'联系人'}>{recordInfo.name}</Item>
+          <Item extra={'13812341234'}>{recordInfo.mobile}</Item>
         </List>
       </div>
     )
   }
 }
 
-export default withRouter(Detail)
+const mapStateToProps = state => {
+  return {
+    reCord: state.reCord
+  }
+}
+
+export default withRouter(connect(mapStateToProps)(Detail))

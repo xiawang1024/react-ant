@@ -8,7 +8,7 @@ class Banner extends Component {
         url: 'http://www.hndt.com/brand/612/res/pi3F3ZID.jpg?1497345245233'
       }
     ],
-    imgHeight: 176
+    imgHeight: 125
   }
   componentDidMount() {
     // simulate img loading

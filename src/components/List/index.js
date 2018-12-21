@@ -2,6 +2,9 @@ import React from 'react'
 import { ListView, PullToRefresh, Icon } from 'antd-mobile'
 import ReactDOM from 'react-dom'
 import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as reCordActions from '../../store/actions/reCord'
 
 import { fetchHotLineList } from '../../api'
 import './index.css'
@@ -81,7 +84,12 @@ class ListViewExample extends React.Component {
     }
   }
 
-  toDetailHandler = id => {
+  toDetailHandler = data => {
+    let { reCordActions } = this.props
+    reCordActions.setCord({
+      recordInfo: data
+    })
+    window.localStorage.setItem('recordInfo', JSON.stringify(data))
     this.props.history.push('/detail')
   }
 
@@ -105,7 +113,7 @@ class ListViewExample extends React.Component {
             <span style={{ color: '#666' }}>{rowData.createTime}</span>
             <Icon
               type='ellipsis'
-              onClick={this.toDetailHandler.bind(this, rowID)}
+              onClick={this.toDetailHandler.bind(this, rowData)}
             />
           </div>
         </div>
@@ -149,5 +157,18 @@ class ListViewExample extends React.Component {
     )
   }
 }
+const mapStateToProps = state => {
+  return {
+    reCord: state.reCord
+  }
+}
 
-export default withRouter(ListViewExample)
+const mapDispatchToProps = dispatch => {
+  return { reCordActions: bindActionCreators(reCordActions, dispatch) }
+}
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ListViewExample)
+)
