@@ -61,13 +61,13 @@ class SignIn extends Component {
         })
         let token = `Bearer ${data}`
         signInActions.login({ authToken: token })
-        Toast.success('登录成功', 2, () => {
+        Toast.success('登录成功', 1, () => {
           localStorage.setItem('authToken', token)
           console.log('准备跳转到报料')
           this.props.history.push('/home')
         })
       } else {
-        Toast.info('账号密码错误！', 2)
+        Toast.info('账号密码错误！', 1)
       }
     })
   }

@@ -79,11 +79,11 @@ class SignUp extends Component {
         this.setState({
           signUpLoading: false
         })
-        Toast.success('注册成功，去登录', 2, () => {
+        Toast.success('注册成功，去登录', 1, () => {
           this.props.history.push('/signIn')
         })
       } else {
-        Toast.info('注册失败，请稍候再试', 2)
+        Toast.info('注册失败，请稍候再试', 1)
       }
     })
   }

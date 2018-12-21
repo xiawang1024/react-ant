@@ -45,7 +45,7 @@ class FormList extends Component {
       content: data.detail,
       area: data.address,
       occurTime: data.date,
-      attachments: this.state.attachments,
+      attachments: JSON.stringify(this.state.attachments),
       name: data.contact,
       mobile: data.tel.split(' ').join('')
     }
