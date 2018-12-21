@@ -108,13 +108,31 @@ const fetchUserInfo = () => axios.post(`/user/current`)
  * @param {*} area 地区
  * @param {*} occurTime 时间
  * @param {Array} attachments 图片
- */
-const fetchPostForm = (title, content, area, occurTime, attachments) =>
-  axios.post(`/clue/create`, { title, content, area, occurTime, attachments })
+ * @param {String} name 联系人
+ * @param {String} mobile 电话
+ *  */
+const fetchPostForm = ({
+  title,
+  content,
+  area,
+  occurTime,
+  attachments,
+  name,
+  mobile
+}) =>
+  axios.post(
+    `/clue/create`,
+    { title, content, area, occurTime, attachments, name, mobile },
+    {
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8'
+      }
+    }
+  )
 /**
  * 获取历史热线
  */
-const fetchHotLineList = () => axios.get(`/clue/history`)
+const fetchHotLineList = () => axios.post(`/clue/history`)
 
 /**
  * upload image

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { fetchPostForm } from '../../api'
+import { fetchPostForm, fetchUploadImage } from '../../api'
 
 import {
   Button,
@@ -21,6 +21,7 @@ class FormList extends Component {
     super(props)
     this.state = {
       files: [],
+      attachments: [],
       submitLoading: false
     }
   }
@@ -38,16 +39,29 @@ class FormList extends Component {
   }
   postData = data => {
     data.date = dayjs(data.date).format('YYYY-MM-DD')
-    data.files = this.state.files
-    setTimeout(() => {
-      console.log(data)
-      this.setState({
-        submitLoading: false
-      })
-      Toast.success('提交成功', 2, () => {
-        this.resetForm()
-      })
-    }, 2000)
+
+    let postData = {
+      title: data.title,
+      content: data.detail,
+      area: data.address,
+      occurTime: data.date,
+      attachments: this.state.attachments,
+      name: data.contact,
+      mobile: data.tel.split(' ').join('')
+    }
+    fetchPostForm(postData).then(res => {
+      let { status } = res.data
+      if (status === 'ok') {
+        this.setState({
+          submitLoading: false
+        })
+        Toast.success('提交成功', 2, () => {
+          this.resetForm()
+        })
+      } else {
+        Toast.fail('提交失败')
+      }
+    })
   }
   resetForm = () => {
     const { setFieldsValue } = this.props.form
@@ -67,6 +81,27 @@ class FormList extends Component {
     })
   }
   onFileChange = (files, type, index) => {
+    console.log(files, type, index)
+    let { attachments } = this.state
+    if (type === 'add') {
+      let len = files.length
+      let file = files[len - 1]
+      let formData = new FormData()
+      formData.append('file', file.file)
+      fetchUploadImage(formData).then(res => {
+        let { msg, data } = res.data
+        if (msg === 'ok') {
+          this.setState({
+            attachments: [...attachments, data]
+          })
+        }
+      })
+    } else {
+      attachments.splice(index, 1)
+      this.setState({
+        attachments
+      })
+    }
     this.setState({
       files
     })

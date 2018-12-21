@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom'
 import { withRouter } from 'react-router-dom'
 import axios from 'axios'
 
+import { fetchHotLineList } from '../../api'
+
 class ListViewExample extends React.Component {
   constructor(props) {
     super(props)
@@ -25,9 +27,9 @@ class ListViewExample extends React.Component {
       ReactDOM.findDOMNode(this.lv).parentNode.offsetTop -
       50
 
-    axios.get('http://rap2api.taobao.org/app/mock/1942/rndemo').then(res => {
+    fetchHotLineList().then(res => {
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(res.data.list),
+        // dataSource: this.state.dataSource.cloneWithRows(res.data.list),
         isLoading: false,
         height: hei
       })
