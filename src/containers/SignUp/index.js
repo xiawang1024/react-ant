@@ -63,15 +63,15 @@ class SignUp extends Component {
   postData = data => {
     let userInfo = localStorage.getItem('wxUserInfo')
     if (userInfo) {
-      let { appId, openId } = userInfo
-      data = Object.assign(data, { appId, openId })
+      let { appid, openid } = JSON.parse(userInfo)
+      data = Object.assign(data, { appid, openid })
     }
     let postData = {
       mobile: parseInt(data.phone.split(' ').join('')),
       password: data.password,
       code: data.code,
-      appId: data.appId || 'wx5f789dea59c6c2c5',
-      openId: data.openId || 'oaYgpwAWb44JGI4rdW8NCEgEMnJ8'
+      appId: data.appid || 'wx5f789dea59c6c2c5',
+      openId: data.openid || 'oaYgpwAWb44JGI4rdW8NCEgEMnJ8'
     }
     fetchSignUp(postData).then(res => {
       let { status } = res.data
@@ -88,29 +88,32 @@ class SignUp extends Component {
     })
   }
   postCode = () => {
-    let { getFieldValue, getFieldError } = this.props.form
-    let errMsg = getFieldError('phone')
+    let { getFieldValue } = this.props.form
 
-    if (errMsg) {
-      Toast.info(errMsg[0], 1)
-      return false
-    }
-
-    if (this.countTimer) {
-      return false
-    } else {
-      let phone = getFieldValue('phone')
-      phone = phone.split(' ').join('')
-      fetchSendCode(parseInt(phone)).then(res => {
-        let { status } = res.data
-        if (status === 1) {
-          this.countDown()
-          Toast.info('验证码发送成功', 1)
+    this.props.form.validateFields((error, value) => {
+      if (error) {
+        if (error.phone) {
+          Toast.info(error.phone.errors[0].message)
+          return
         } else {
-          Toast.info('验证码发送失败，请稍候再试', 2)
+          if (this.countTimer) {
+            return false
+          } else {
+            let phone = getFieldValue('phone')
+            phone = phone.split(' ').join('')
+            fetchSendCode(parseInt(phone)).then(res => {
+              let { status } = res.data
+              if (status === 1) {
+                this.countDown()
+                Toast.info('验证码发送成功', 1)
+              } else {
+                Toast.info('验证码发送失败，请稍候再试', 2)
+              }
+            })
+          }
         }
-      })
-    }
+      }
+    })
   }
 
   render() {
@@ -163,7 +166,16 @@ class SignUp extends Component {
             })}
             placeholder='验证码'
             type='number'
-            extra={codeText}
+            extra={
+              <Button
+                type='primary'
+                inline
+                size='small'
+                style={{ height: '21px', lineHeight: '21px', fontSize: '11px' }}
+              >
+                {codeText}
+              </Button>
+            }
             onExtraClick={this.postCode}
           />
         </form>

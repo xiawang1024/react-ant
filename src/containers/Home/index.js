@@ -1,6 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
 import './index.css'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as signInActions from '../../store/actions/signIn'
 import { TabBar } from 'antd-mobile'
 
 import Form from '../Form'
@@ -19,7 +22,11 @@ class TabBarExample extends React.Component {
   }
 
   componentDidMount() {
-    fetchUserInfo()
+    let { signInActions } = this.props
+    fetchUserInfo().then(res => {
+      let userInfo = res.data
+      signInActions.setUserInfo({ userInfo })
+    })
 
     let { selectedTab } =
       !!this.props.location.state && !!this.props.location.state.selectedTab
@@ -113,4 +120,17 @@ class TabBarExample extends React.Component {
   }
 }
 
-export default TabBarExample
+const mapStateToProps = state => {
+  return {
+    userInfo: state.userInfo
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return { signInActions: bindActionCreators(signInActions, dispatch) }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TabBarExample)

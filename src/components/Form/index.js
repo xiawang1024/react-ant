@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+
 import { fetchPostForm, fetchUploadImage } from '../../api'
 
 import {
@@ -114,6 +116,7 @@ class FormList extends Component {
   render() {
     const { getFieldProps, getFieldError } = this.props.form
     const { files } = this.state
+    let { userInfo } = this.props.signIn
     return (
       <form className='FormList' style={{ paddingBottom: '80px' }}>
         <WhiteSpace />
@@ -183,7 +186,10 @@ class FormList extends Component {
           clear
           onChange={this.onIptChange}
           error={getFieldError('tel') ? true : false}
-          {...getFieldProps('tel', { rules: [{ required: true }] })}
+          {...getFieldProps('tel', {
+            initialValue: userInfo.mobile,
+            rules: [{ required: true }]
+          })}
           placeholder='请填写联系电话'
           ref={el => (this.telLabel = el)}
         >
@@ -204,5 +210,10 @@ class FormList extends Component {
     )
   }
 }
+const mapStateToProps = state => {
+  return {
+    signIn: state.signIn
+  }
+}
 
-export default createForm()(FormList)
+export default connect(mapStateToProps)(createForm()(FormList))

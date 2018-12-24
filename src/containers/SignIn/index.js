@@ -52,7 +52,7 @@ class SignIn extends Component {
       mobile: parseInt(data.phone.split(' ').join('')),
       password: data.password
     }
-
+    window.localStorage.setItem('mobile', postData.mobile)
     fetchSignIn(postData).then(res => {
       let { status, data } = res.data
       if (status === 'ok') {
@@ -77,6 +77,7 @@ class SignIn extends Component {
   }
   render() {
     const { getFieldProps, getFieldError } = this.props.form
+    let initMobile = window.localStorage.getItem('mobile')
     return (
       <WingBlank style={{ marginTop: '80px' }}>
         <Flex justify='center'>
@@ -87,6 +88,7 @@ class SignIn extends Component {
           <InputItem
             error={getFieldError('phone') ? true : false}
             {...getFieldProps('phone', {
+              initialValue: initMobile,
               rules: [
                 { required: true, message: '请输入手机号' },
                 {
