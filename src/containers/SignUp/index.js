@@ -168,7 +168,7 @@ class SignUp extends Component {
             type='number'
             extra={
               <Button
-                type='primary'
+                type='ghost'
                 inline
                 size='small'
                 style={{ height: '21px', lineHeight: '21px', fontSize: '11px' }}

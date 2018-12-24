@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Toast } from 'antd-mobile'
 import Qs from 'qs'
 
-// axios.defaults.baseURL = `https://a.weixin.hndt.com/boom/openapi`
+axios.defaults.baseURL = `https://a.weixin.hndt.com/boom/openapi`
 // axios.defaults.headers.common['Authorization'] = authToken
 
 //拦截器

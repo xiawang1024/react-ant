@@ -52,7 +52,7 @@ class SignIn extends Component {
       mobile: parseInt(data.phone.split(' ').join('')),
       password: data.password
     }
-    window.localStorage.setItem('mobile', postData.mobile)
+    window.localStorage.setItem('mobile', data.phone)
     fetchSignIn(postData).then(res => {
       let { status, data } = res.data
       if (status === 'ok') {
