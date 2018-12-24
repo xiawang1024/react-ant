@@ -7835,7 +7835,7 @@ prompts@^0.1.9:
     kleur "^2.0.1"
     sisteransi "^0.1.1"
 
-prop-types@15.x, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.8, prop-types@^15.6.2:
+prop-types@15.x, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.2:
   version "15.6.2"
   resolved "http://registry.npm.taobao.org/prop-types/download/prop-types-15.6.2.tgz#05d5ca77b4453e985d60fc7ff8c859094a497102"
   integrity sha1-BdXKd7RFPphdYPx/+MhZCUpJcQI=
@@ -8313,6 +8313,14 @@ react-tween-state@^0.1.5:
   dependencies:
     raf "^3.1.0"
     tween-functions "^1.0.1"
+
+react-wx-images-viewer@^1.0.6:
+  version "1.0.6"
+  resolved "http://registry.npm.taobao.org/react-wx-images-viewer/download/react-wx-images-viewer-1.0.6.tgz#a39592de6e2b1451943565ecc36f8d99c318f6c2"
+  integrity sha1-o5WS3m4rFFGUNWXsw2+NmcMY9sI=
+  dependencies:
+    prop-types "^15.6.0"
+    raf "^3.1.0"
 
 react@^16.6.3:
   version "16.6.3"

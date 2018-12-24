@@ -4,31 +4,20 @@ import { NavBar, Icon, List, Flex } from 'antd-mobile'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 
+import WxImageViewer from 'react-wx-images-viewer'
+
 import './index.css'
 
 const Item = List.Item
 const Brief = Item.Brief
 
-const data = [
-  {
-    url: 'https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg',
-    id: '2121'
-  },
-  {
-    url: 'https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg',
-    id: '2122'
-  },
-  {
-    url: 'https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg',
-    id: '2121'
-  },
-  {
-    url: 'https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg',
-    id: '2122'
-  }
-]
-
 class Detail extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      isViewPic: false
+    }
+  }
   componentDidMount = () => {}
   toHomeHandler = () => {
     // this.props.history.push('/home', { selectedTab: 'selectedTwo' })
@@ -37,9 +26,21 @@ class Detail extends Component {
       state: { selectedTab: 'selectedTwo' }
     })
   }
-
+  openView = index => {
+    this.setState({
+      index,
+      isViewPic: true
+    })
+  }
+  onClose = () => {
+    this.setState({
+      isViewPic: false
+    })
+  }
   render() {
+    let { index, isViewPic } = this.state
     let { recordInfo } = this.props.reCord
+    let imgList = JSON.parse(recordInfo.attachments)
     return (
       <div style={{ paddingBottom: '80px' }}>
         <NavBar
@@ -54,15 +55,19 @@ class Detail extends Component {
             主题 <Brief>{recordInfo.title}</Brief>
           </Item>
           <Item multipleLine>
-            具体内容 <Brief>{recordInfo.content}</Brief>
+            内容 <Brief>{recordInfo.content}</Brief>
           </Item>
 
-          {data.length > 0 ? (
+          {imgList.length > 0 ? (
             <Item>
               <Flex>
-                {data.map((item, index) => (
+                {imgList.map((item, index) => (
                   <Flex.Item key={index}>
-                    <img className='imgView' src={item.url} />
+                    <img
+                      className='imgView'
+                      src={item}
+                      onClick={this.openView.bind(this, index)}
+                    />
                   </Flex.Item>
                 ))}
               </Flex>
@@ -74,13 +79,18 @@ class Detail extends Component {
           )}
         </List>
         <List renderHeader={() => '日期/区域'}>
-          <Item extra={'2018-12-06'}>{recordInfo.createTime}</Item>
-          <Item extra={'郑州市二七区'}>{recordInfo.area}</Item>
+          <Item extra={'时间'}>{recordInfo.createTime}</Item>
+          <Item extra={'区域'}>{recordInfo.area}</Item>
         </List>
         <List renderHeader={() => '联系人'}>
           <Item extra={'联系人'}>{recordInfo.name}</Item>
-          <Item extra={'13812341234'}>{recordInfo.mobile}</Item>
+          <Item extra={'联系电话'}>{recordInfo.mobile}</Item>
         </List>
+        {isViewPic ? (
+          <WxImageViewer onClose={this.onClose} urls={imgList} index={index} />
+        ) : (
+          ''
+        )}
       </div>
     )
   }

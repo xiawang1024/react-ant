@@ -16,6 +16,7 @@
     "react-redux": "^6.0.0",
     "react-router-dom": "4.4.0-beta.6",
     "react-scripts": "2.1.1",
+    "react-wx-images-viewer": "^1.0.6",
     "redux": "^4.0.1"
   },
   "scripts": {
