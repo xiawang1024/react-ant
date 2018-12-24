@@ -1,4 +1,4 @@
-import { WeChatConf } from './util'
+import { WeChatConf } from './untils'
 
 const weChatConf = new WeChatConf()
 

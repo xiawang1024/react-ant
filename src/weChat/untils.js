@@ -60,8 +60,8 @@ class WeChat {
     })
       .then(res => {
         let data = res.data
-        if (data.status == 'ok') {
-          this.setStorage('WXHNDTOPENID', JSON.stringify(data.data))
+        if (data.status === 'ok') {
+          this.setStorage('wxUserInfo', JSON.stringify(data.data))
         } else {
           this.redirectUrl()
         }
@@ -81,6 +81,7 @@ class WeChat {
 class WeChatConf extends WeChat {
   constructor(props) {
     super(props)
+    this.name = {}
   }
   init() {
     this.hasCode()
