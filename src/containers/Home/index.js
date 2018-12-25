@@ -120,17 +120,8 @@ class TabBarExample extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    userInfo: state.userInfo
-  }
-}
-
 const mapDispatchToProps = dispatch => {
   return { signInActions: bindActionCreators(signInActions, dispatch) }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TabBarExample)
+export default connect(mapDispatchToProps)(TabBarExample)

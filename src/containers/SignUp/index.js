@@ -8,13 +8,28 @@ import {
   WhiteSpace,
   Button,
   Flex,
-  Toast
+  Toast,
+  Picker,
+  List
 } from 'antd-mobile'
 import { createForm } from 'rc-form'
 
 //验证码间隔时间
 const COUNT_DOWN = 20
-
+const departList = [
+  {
+    label: '部门1',
+    value: '部门1'
+  },
+  {
+    label: '部门2',
+    value: '部门2'
+  },
+  {
+    label: '部门3',
+    value: '部门3'
+  }
+]
 class SignUp extends Component {
   constructor(props) {
     super(props)
@@ -49,6 +64,10 @@ class SignUp extends Component {
         }
         if (error.password) {
           Toast.info(error.password.errors[0].message)
+          return
+        }
+        if (error.depart) {
+          Toast.info(error.depart.errors[0].message)
           return
         }
         if (error.code) {
@@ -125,7 +144,7 @@ class SignUp extends Component {
           <h2>注册</h2>
         </Flex>
         <WhiteSpace size='xl' />
-        <form>
+        <List>
           <InputItem
             error={getFieldError('phone') ? true : false}
             {...getFieldProps('phone', {
@@ -153,6 +172,16 @@ class SignUp extends Component {
           >
             密码
           </InputItem>
+          <Picker
+            data={departList}
+            cols={1}
+            {...getFieldProps('depart', {
+              rules: [{ required: true, message: '请选择部门' }]
+            })}
+            style={{ borderBottom: '1px solid #000' }}
+          >
+            <List.Item arrow='horizontal'>部门</List.Item>
+          </Picker>
           <InputItem
             error={getFieldError('code') ? true : false}
             {...getFieldProps('code', {
@@ -178,7 +207,7 @@ class SignUp extends Component {
             }
             onExtraClick={this.postCode}
           />
-        </form>
+        </List>
         <WhiteSpace size='xl' />
         <Button
           type='primary'
