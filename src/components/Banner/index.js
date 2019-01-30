@@ -8,7 +8,7 @@ class Banner extends Component {
         url: 'http://www.hndt.com/brand/612/res/pi3F3ZID.jpg?1497345245233'
       }
     ],
-    imgHeight: 125
+    imgHeight: 140
   }
   componentDidMount() {
     // simulate img loading
@@ -28,9 +28,9 @@ class Banner extends Component {
         autoplay={false}
         infinite
         beforeChange={(from, to) => console.log(`slide from ${from} to ${to}`)}
-        afterChange={index => console.log('slide to', index)}
+        afterChange={(index) => console.log('slide to', index)}
       >
-        {this.state.data.map(item => (
+        {this.state.data.map((item) => (
           // eslint-disable-next-line jsx-a11y/anchor-is-valid
           <a
             key={item.id}
@@ -38,18 +38,17 @@ class Banner extends Component {
             href='javascript:void(0)'
             style={{
               display: 'inline-block',
-              width: '100%',
-              height: this.state.imgHeight
+              width: '100%'
             }}
           >
             <img
               src={item.url}
               alt=''
-              style={{ width: '100%', verticalAlign: 'top' }}
+              style={{ width: '100%', verticalAlign: 'top', height: this.state.imgHeight + 'px' }}
               onLoad={() => {
                 // fire window resize event to change height
                 window.dispatchEvent(new Event('resize'))
-                this.setState({ imgHeight: 'auto' })
+                this.setState({ imgHeight: '140' })
               }}
             />
           </a>
