@@ -2,39 +2,47 @@ import axios from 'axios'
 import { Toast } from 'antd-mobile'
 import Qs from 'qs'
 
-axios.defaults.baseURL = `https://a.weixin.hndt.com/boom/openapi`
+axios.defaults.baseURL = `/boom/openapi`
+// axios.defaults.baseURL = `https://a.weixin.hndt.com/boom/openapi`
 // axios.defaults.headers.common['Authorization'] = authToken
 
+function isNeedToken(config) {
+  if (config.url.indexOf('history') !== -1) {
+    return true
+  } else {
+    return false
+  }
+}
 //拦截器
 axios.interceptors.request.use(
-  config => {
+  (config) => {
     let authToken = window.localStorage.getItem('authToken')
-    if (authToken) {
+    if (authToken && isNeedToken(config)) {
       config.headers.Authorization = `${authToken}`
     }
     console.log(config)
     return config
   },
-  error => {
+  (error) => {
     return Promise.reject(error)
   }
 )
 let cancelFlag = false
 axios.interceptors.response.use(
-  response => {
+  (response) => {
     return response
   },
-  error => {
+  (error) => {
     if (error.response) {
       // eslint-disable-next-line default-case
-      let status = error.response.data.message
-      console.log(typeof status)
+      let status = error.response.data.status
+      console.log(status)
       switch (status) {
-        case '401':
+        case 500:
           if (cancelFlag) return Promise.reject(error)
           cancelFlag = true
           localStorage.token = ''
-          Toast.info('会话已过期，请重新登录', 2, () => {
+          Toast.info('请先登录', 2, () => {
             cancelFlag = false
             //路由跳转到登录页
             window.location = '#/signIn'
@@ -78,8 +86,7 @@ const fetchSignIn = ({ mobile, password }) =>
  * 验证码发送
  * @param {*} mobile 手机号
  */
-const fetchSendCode = mobile =>
-  axios.post(`/user/send/code`, Qs.stringify({ mobile }))
+const fetchSendCode = (mobile) => axios.post(`/user/send/code`, Qs.stringify({ mobile }))
 /**
  * 注册
  * @param {*} mobile 手机号
@@ -95,8 +102,7 @@ const fetchSignUp = ({ mobile, password, code, appId, openId }) =>
  * @param {*} mobile 手机号
  * @param {*} code 验证码
  */
-const fetchSignInByCode = (mobile, code) =>
-  axios.post(`/user/code/login`, { mobile, code })
+const fetchSignInByCode = (mobile, code) => axios.post(`/user/code/login`, { mobile, code })
 /**
  * 获取当前登录用户信息
  */
@@ -109,20 +115,13 @@ const fetchUserInfo = () => axios.post(`/user/current`)
  * @param {*} occurTime 时间
  * @param {Array} attachments 图片
  * @param {String} name 联系人
+ * @param {String} sex 心别
  * @param {String} mobile 电话
  *  */
-const fetchPostForm = ({
-  title,
-  content,
-  area,
-  occurTime,
-  attachments,
-  name,
-  mobile
-}) =>
+const fetchPostForm = ({ title, content, area, occurTime, attachments, name, sex, mobile }) =>
   axios.post(
     `/clue/create`,
-    { title, content, area, occurTime, attachments, name, mobile },
+    { title, content, area, occurTime, attachments, name, sex, mobile },
     {
       headers: {
         'Content-Type': 'application/json;charset=UTF-8'
@@ -133,14 +132,13 @@ const fetchPostForm = ({
  * 获取历史热线
  * @param {*} page
  */
-const fetchHotLineList = (page = 1) =>
-  axios.post(`/clue/history`, Qs.stringify({ page }))
+const fetchHotLineList = (page = 1) => axios.post(`/clue/history`, Qs.stringify({ page }))
 
 /**
  * upload image
  * @param {*} formData
  */
-const fetchUploadImage = formData =>
+const fetchUploadImage = (formData) =>
   axios.post(`/clue/file/upload`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data'

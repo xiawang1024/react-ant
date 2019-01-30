@@ -13,7 +13,7 @@ const NotFound = lazy(() => import('../containers/NotFound'))
 const PrivateRoute = ({ component: Component, authToken, ...rest }) => (
   <Route
     {...rest}
-    render={props =>
+    render={(props) =>
       authToken ? (
         <Component {...props} />
       ) : (
@@ -23,8 +23,7 @@ const PrivateRoute = ({ component: Component, authToken, ...rest }) => (
             state: { from: props.location }
           }}
         />
-      )
-    }
+      )}
   />
 )
 
@@ -43,15 +42,13 @@ class Router extends Component {
           }
         >
           <Switch>
-            <Route exact path='/' component={Home} />
+            <Route exact path='/' render={() => <Redirect to='/home' />} />
             <Route path='/signIn' component={SignIn} />
             <Route path='/signUp' component={SignUp} />
-            <PrivateRoute path='/home' authToken={authToken} component={Home} />
-            <PrivateRoute
-              path='/detail'
-              authToken={authToken}
-              component={Detail}
-            />
+            <Route path='/home' component={Home} />
+
+            {/* <PrivateRoute path='/home' authToken={authToken} component={Home} /> */}
+            <PrivateRoute path='/detail' authToken={authToken} component={Detail} />
             <Route path='*' component={NotFound} />
           </Switch>
         </Suspense>
@@ -60,7 +57,7 @@ class Router extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     signIn: state.signIn
   }

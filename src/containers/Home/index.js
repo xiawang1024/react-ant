@@ -9,8 +9,6 @@ import { TabBar } from 'antd-mobile'
 import Form from '../Form'
 import ListView from '../../components/List'
 
-import { fetchUserInfo } from '../../api'
-
 class TabBarExample extends React.Component {
   constructor(props) {
     super(props)
@@ -23,10 +21,10 @@ class TabBarExample extends React.Component {
 
   componentDidMount() {
     let { signInActions } = this.props
-    fetchUserInfo().then(res => {
-      let userInfo = res.data
-      signInActions.setUserInfo({ userInfo })
-    })
+    // fetchUserInfo().then((res) => {
+    //   let userInfo = res.data
+    //   signInActions.setUserInfo({ userInfo })
+    // })
 
     let { selectedTab } =
       !!this.props.location.state && !!this.props.location.state.selectedTab
@@ -53,6 +51,7 @@ class TabBarExample extends React.Component {
           tintColor='#33A3F4'
           barTintColor='white'
           tabBarPosition='bottom'
+          prerenderingSiblingsNumber='0'
         >
           <TabBar.Item
             icon={
@@ -82,6 +81,7 @@ class TabBarExample extends React.Component {
               })
             }}
           >
+            {/* <Route path='/home' component={Form} /> */}
             {this.renderContent('rebe')}
           </TabBar.Item>
           <TabBar.Item
@@ -120,17 +120,14 @@ class TabBarExample extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     userInfo: state.userInfo
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return { signInActions: bindActionCreators(signInActions, dispatch) }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TabBarExample)
+export default connect(mapStateToProps, mapDispatchToProps)(TabBarExample)

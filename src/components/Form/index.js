@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 
-import { fetchPostForm, fetchUploadImage } from '../../api'
-
+import { fetchPostForm, fetchUploadImage, fetchUserInfo } from '../../api'
 import { titleTypeList } from './data.js'
 
 import {
@@ -37,30 +37,32 @@ class FormList extends Component {
   }
   submit = () => {
     this.props.form.validateFields((error, value) => {
-      // if (!error) {
-      //   this.setState({
-      //     submitLoading: true
-      //   })
-      //   this.postData(value)
-      // } else {
-      //   Toast.info('请填写完成信息', 2)
-      // }
-      this.setState({
-        submitLoading: true
-      })
-      this.postData(value)
+      if (!error) {
+        this.setState({
+          submitLoading: true
+        })
+        this.postData(value)
+      } else {
+        Toast.info('请填写联系电话', 2)
+      }
+      // console.log(error)
+      // this.setState({
+      //   submitLoading: true
+      // })
+      // this.postData(value)
     })
   }
   postData = (data) => {
     data.date = dayjs(data.date).format('YYYY-MM-DD')
 
     let postData = {
-      title: data.title,
+      title: data.title && data.title[0],
       content: data.detail,
       area: data.address,
       occurTime: data.date,
       attachments: JSON.stringify(this.state.attachments),
       name: data.contact,
+      sex: this.state.sex,
       mobile: data.tel && data.tel.split(' ').join('')
     }
     console.log(postData)
@@ -70,8 +72,11 @@ class FormList extends Component {
         this.setState({
           submitLoading: false
         })
-        Toast.success('提交成功', 2, () => {
-          this.resetForm()
+        Toast.success('提交成功', 1, () => {
+          Toast.info('通过手机号可以查询进度和历史爆料信息，请设置账户密码。', 3, () => {
+            this.resetForm()
+            // this.props.history.push('/signIn')
+          })
         })
       } else {
         Toast.fail('提交失败', 1, () => {
@@ -153,27 +158,10 @@ class FormList extends Component {
         <WhiteSpace />
 
         <List>
-          <InputItem
-            name='title'
-            clear
-            error={getFieldError('title') ? true : false}
-            {...getFieldProps('title', { rules: [ { required: true } ] })}
-            placeholder='请输入线索主题'
-            ref={(el) => (this.themeLabel = el)}
-          >
-            <div onClick={() => this.themeLabel.focus()}>主题</div>
-          </InputItem>
           <Picker data={titleTypeList} cols={1} {...getFieldProps('title')} extra='请选择新闻类型'>
             <List.Item arrow='horizontal'>新闻类型</List.Item>
           </Picker>
-          <TextareaItem
-            name='detail'
-            clear
-            error={getFieldError('detail') ? true : false}
-            {...getFieldProps('detail', { rules: [ { required: true } ] })}
-            placeholder='请输入线索具体内容'
-            rows={5}
-          />
+          <TextareaItem name='detail' clear {...getFieldProps('detail')} placeholder='请输入线索具体内容' rows={5} />
 
           <List.Item>
             上传图片
@@ -185,23 +173,11 @@ class FormList extends Component {
             />
           </List.Item>
 
-          {/* <DatePicker
-            mode='date'
-            title='选择日期'
-            format={`YYYY-MM-DD`}
-            {...getFieldProps('date', {
-              initialValue: new Date(),
-              rules: [ { required: true } ]
-            })}
-          >
-            <List.Item arrow='horizontal'>日期</List.Item>
-          </DatePicker> */}
           <WhiteSpace size='sm' />
           <InputItem
             name='address'
             clear
-            error={getFieldError('address') ? true : false}
-            {...getFieldProps('address', { rules: [ { required: true } ] })}
+            {...getFieldProps('address')}
             placeholder='请填写区域信息'
             ref={(el) => (this.areaLabel = el)}
           >
@@ -211,8 +187,7 @@ class FormList extends Component {
           <InputItem
             name='contact'
             clear
-            error={getFieldError('contact') ? true : false}
-            {...getFieldProps('contact', { rules: [ { required: true } ] })}
+            {...getFieldProps('contact')}
             placeholder='请填写联系人'
             extra={<SexSelect sex={this.state.sex} />}
             onExtraClick={this.sexSelectHandler}
@@ -225,8 +200,8 @@ class FormList extends Component {
             name='tel'
             type='phone'
             clear
-            onChange={this.onIptChange}
             error={getFieldError('tel') ? true : false}
+            onChange={this.onIptChange}
             {...getFieldProps('tel', {
               initialValue: userInfo.mobile,
               rules: [ { required: true } ]
@@ -264,4 +239,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(createForm()(FormList))
+export default withRouter(connect(mapStateToProps)(createForm()(FormList)))
