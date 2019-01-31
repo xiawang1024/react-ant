@@ -12,5 +12,5 @@ function isWeixinBrowser() {
 }
 
 if (isWeixinBrowser()) {
-  // weChatConf.init()
+  weChatConf.init()
 }

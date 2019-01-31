@@ -2,14 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { fetchSendCode, fetchSignUp } from '../../api'
 
-import {
-  InputItem,
-  WingBlank,
-  WhiteSpace,
-  Button,
-  Flex,
-  Toast
-} from 'antd-mobile'
+import { InputItem, WingBlank, WhiteSpace, Button, Flex, Toast } from 'antd-mobile'
 import { createForm } from 'rc-form'
 
 //验证码间隔时间
@@ -60,7 +53,7 @@ class SignUp extends Component {
       }
     })
   }
-  postData = data => {
+  postData = (data) => {
     let userInfo = localStorage.getItem('wxUserInfo')
     if (userInfo) {
       let { appid, openid } = JSON.parse(userInfo)
@@ -70,10 +63,10 @@ class SignUp extends Component {
       mobile: parseInt(data.phone.split(' ').join('')),
       password: data.password,
       code: data.code,
-      appId: data.appid || 'wx5f789dea59c6c2c5',
-      openId: data.openid || 'oaYgpwAWb44JGI4rdW8NCEgEMnJ8'
+      appId: data.appid || 'wxbf02a07137a4e2d3',
+      openId: data.openid
     }
-    fetchSignUp(postData).then(res => {
+    fetchSignUp(postData).then((res) => {
       let { status } = res.data
       if (status === 'ok') {
         this.setState({
@@ -101,7 +94,7 @@ class SignUp extends Component {
           } else {
             let phone = getFieldValue('phone')
             phone = phone.split(' ').join('')
-            fetchSendCode(parseInt(phone)).then(res => {
+            fetchSendCode(parseInt(phone)).then((res) => {
               let { status } = res.data
               if (status === 1) {
                 this.countDown()
@@ -146,7 +139,7 @@ class SignUp extends Component {
           <InputItem
             error={getFieldError('password') ? true : false}
             {...getFieldProps('password', {
-              rules: [{ required: true, message: '请输入密码' }]
+              rules: [ { required: true, message: '请输入密码' } ]
             })}
             type='password'
             placeholder='****'
@@ -167,12 +160,7 @@ class SignUp extends Component {
             placeholder='验证码'
             type='number'
             extra={
-              <Button
-                type='ghost'
-                inline
-                size='small'
-                style={{ height: '21px', lineHeight: '21px', fontSize: '11px' }}
-              >
+              <Button type='ghost' inline size='small' style={{ height: '21px', lineHeight: '21px', fontSize: '11px' }}>
                 {codeText}
               </Button>
             }
@@ -180,11 +168,7 @@ class SignUp extends Component {
           />
         </form>
         <WhiteSpace size='xl' />
-        <Button
-          type='primary'
-          loading={this.state.signUpLoading}
-          onClick={this.singUpHandler}
-        >
+        <Button type='primary' loading={this.state.signUpLoading} onClick={this.singUpHandler}>
           注册
         </Button>
       </WingBlank>

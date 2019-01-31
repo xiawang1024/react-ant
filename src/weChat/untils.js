@@ -58,7 +58,7 @@ class WeChat {
         subscribe: false
       })
     })
-      .then(res => {
+      .then((res) => {
         let data = res.data
         if (data.status === 'ok') {
           this.setStorage('wxUserInfo', JSON.stringify(data.data))
@@ -88,51 +88,49 @@ class WeChatConf extends WeChat {
     this.initShare()
   }
   initShare() {
-    axios
-      .post(SHARE_URL, Qs.stringify({ url: window.location.href }))
-      .then(res => {
-        let data = res.data
-        wx.config({
-          debug: false,
-          appId: data.appId,
-          timestamp: data.timestamp,
-          nonceStr: data.nonceStr,
-          signature: data.signature,
-          jsApiList: [
-            'onMenuShareTimeline',
-            'onMenuShareAppMessage',
-            'chooseImage',
-            'uploadImage',
-            'previewImage',
-            'startRecord',
-            'playVoice',
-            'stopRecord',
-            'downloadVoice',
-            'uploadVoice',
-            'stopVoice',
-            'openLocation'
-          ]
+    axios.post(SHARE_URL, Qs.stringify({ url: window.location.href })).then((res) => {
+      let data = res.data
+      wx.config({
+        debug: false,
+        appId: data.appId,
+        timestamp: data.timestamp,
+        nonceStr: data.nonceStr,
+        signature: data.signature,
+        jsApiList: [
+          'onMenuShareTimeline',
+          'onMenuShareAppMessage',
+          'chooseImage',
+          'uploadImage',
+          'previewImage',
+          'startRecord',
+          'playVoice',
+          'stopRecord',
+          'downloadVoice',
+          'uploadVoice',
+          'stopVoice',
+          'openLocation'
+        ]
+      })
+      wx.ready(() => {
+        wx.onMenuShareTimeline({
+          title: shareTitle,
+          link: shareLink,
+          imgUrl: shareImg,
+          success: function() {},
+          cancel: function() {}
         })
-        wx.ready(() => {
-          wx.onMenuShareTimeline({
-            title: shareTitle,
-            link: shareLink,
-            imgUrl: shareImg,
-            success: function() {},
-            cancel: function() {}
-          })
-          wx.onMenuShareAppMessage({
-            title: shareTitle,
-            link: shareLink,
-            imgUrl: shareImg,
-            desc: shareDesc,
-            type: '',
-            dataUrl: '',
-            success: function() {},
-            cancel: function() {}
-          })
+        wx.onMenuShareAppMessage({
+          title: shareTitle,
+          link: shareLink,
+          imgUrl: shareImg,
+          desc: shareDesc,
+          type: '',
+          dataUrl: '',
+          success: function() {},
+          cancel: function() {}
         })
       })
+    })
   }
 }
 export { WeChat, WeChatConf }
